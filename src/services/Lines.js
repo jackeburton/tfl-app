@@ -29,9 +29,17 @@ const getLineStatus = (lines) => {
     return request.then(response => response.data)
 }
 
+const getArrival = (lines, stop) => {
+    const request = axios.get(`https://api.tfl.gov.uk/Line/${lines}/Arrivals/${stop}`)
+    return request.then(response => response.data)
+}
+
+//https://naptan.api.dft.gov.uk/v1/access-nodes?atcoAreaCodes=490&dataFormat=xml - GETS ALL NAPTAN CODES FOR STOPS IN LONDON
+
 const exportedObject = {
     getLine,
-    getLineStatus
+    getLineStatus,
+    getArrival
 };
 
 export default exportedObject
