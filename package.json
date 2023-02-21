@@ -10,7 +10,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "simple-xml-to-json": "^1.0.9",
+    "web-vitals": "^2.1.4",
+    "xml-js": "^1.6.11",
+    "xml2js": "^0.4.23"
   },
   "scripts": {
     "start": "react-scripts start",
