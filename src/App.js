@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import TubeLines from './components/TubeLines'
 import BusLines from './components/BusLines'
+import Dropdown from './components/Dropdown'
 import lineService from './services/Lines'
 import busStopService from './services/BusStops'
 
@@ -25,10 +26,13 @@ function App() {
       }
     ]
   )
+  const [allLines, setAllLines] = useState([])
 
   useEffect(() => {
     lineService
-      .getLineStatus(dbTrainLines)
+      .getLineStatus(
+
+        dbTrainLines)
       .then(initialLines => {
         setLineInfo(initialLines)
       })
@@ -39,6 +43,12 @@ function App() {
         setBusInfo(initialBusLines)
       })
 
+    lineService
+      .getAllTubeLines()
+      .then(initialTubeLines => {
+        setAllLines(initialTubeLines)
+      })
+
     //busStopService.getAllStops()
 
   }, [])
@@ -47,6 +57,7 @@ function App() {
     <div>
       <TubeLines lineInfo={lineInfo} />
       <BusLines lineInfo={busInfo} />
+      <Dropdown isMulti placeHolder="Select..." options={allLines} />
     </div>
   );
 }

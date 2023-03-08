@@ -36,10 +36,28 @@ const getArrival = (lines, stop) => {
 
 //https://naptan.api.dft.gov.uk/v1/access-nodes?atcoAreaCodes=490&dataFormat=xml - GETS ALL NAPTAN CODES FOR STOPS IN LONDON
 
+const getAllTubeLines = () => {
+    return axios.get('https://api.tfl.gov.uk/Line/Mode/tube/Route')
+        .then(response => {
+            const data = response.data;
+            const tubeLines = data.map(item => {
+                return {
+                    label: item.name,
+                    value: item.id
+                };
+            });
+            return tubeLines;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
 const exportedObject = {
     getLine,
     getLineStatus,
-    getArrival
+    getArrival,
+    getAllTubeLines
 };
 
 export default exportedObject
