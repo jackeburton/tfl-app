@@ -25,6 +25,15 @@ const getLineStatusOLD = (lines) => {
 }
 
 const getLineStatus = (lines) => {
+
+    if (Array.isArray(lines)) {
+        let strlines = ""
+        lines.forEach(line => {
+            strlines = strlines + "," + line.value
+        })
+        lines = strlines
+    }
+
     const request = axios.get(`https://api.tfl.gov.uk/Line/${lines}/Status`)
     return request.then(response => response.data)
 }

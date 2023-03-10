@@ -6,14 +6,13 @@ import Dropdown from './components/Dropdown'
 import lineService from './services/Lines'
 import busStopService from './services/BusStops'
 
-const dbTrainLines = 'jubilee,dlr'
 const dbBusLines = '188'
 const dbBusStops = '490005231K'
 
 function App() {
   const [lineInfo, setLineInfo] = useState([])
   const [busInfo, setBusInfo] = useState([])
-  const [lineSelected, setLineSelected] = useState(dbTrainLines)
+  const [lineSelected, setLineSelected] = useState(null)
   const [busLineStop, setBusLineStop] = useState(
     [
       {
@@ -29,13 +28,6 @@ function App() {
   const [allLines, setAllLines] = useState([])
 
   useEffect(() => {
-    lineService
-      .getLineStatus(
-
-        dbTrainLines)
-      .then(initialLines => {
-        setLineInfo(initialLines)
-      })
 
     lineService
       .getArrival(dbBusLines, dbBusStops)
@@ -53,11 +45,29 @@ function App() {
 
   }, [])
 
+  useEffect(() => {
+    if (lineSelected) {
+      lineService
+        .getLineStatus(lineSelected)
+        .then(Lines => {
+          setLineInfo(Lines)
+        })
+    }
+  }, [lineSelected])
+
+  const updateLineSelected = (newSelectedLines) => {
+    setLineSelected(newSelectedLines)
+  }
+
   return (
     <div>
       <TubeLines lineInfo={lineInfo} />
       <BusLines lineInfo={busInfo} />
-      <Dropdown isMulti placeHolder="Select..." options={allLines} />
+      <Dropdown
+        isMulti placeHolder="Select..."
+        options={allLines}
+        onChange={(value) => updateLineSelected(value)}
+      />
     </div>
   );
 }

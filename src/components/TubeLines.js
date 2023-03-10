@@ -17,7 +17,7 @@ const TubeLines = ({ lineInfo }) => {
     } else {
         return (
             <div>
-                loading...
+                Please select some tube lines
             </div>
         )
     }
