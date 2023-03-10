@@ -5,7 +5,7 @@ import BusLines from './components/BusLines'
 import Dropdown from './components/Dropdown'
 import lineService from './services/Lines'
 import busStopService from './services/BusStops'
-
+import './Fonts.css';
 const dbBusLines = '188'
 const dbBusStops = '490005231K'
 
@@ -61,13 +61,13 @@ function App() {
 
   return (
     <div>
-      <TubeLines lineInfo={lineInfo} />
-      <BusLines lineInfo={busInfo} />
       <Dropdown
         isMulti placeHolder="Select..."
         options={allLines}
         onChange={(value) => updateLineSelected(value)}
       />
+      <TubeLines lineInfo={lineInfo} />
+      <BusLines lineInfo={busInfo} />
     </div>
   );
 }

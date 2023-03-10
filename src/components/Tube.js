@@ -1,17 +1,17 @@
 
-const Tube = ({ tubeName, tubeStatus }) => {
+import "./Tube.css";
+
+const Tube = ({ tubeName, tubeStatus, tubeId }) => {
 
     return (
-        <div>
-            <h3>{tubeName}</h3>
-            <ul>
-                {tubeStatus.map(status => (
-                    <li key={status.id}>
-                        {status.statusSeverityDescription}<br></br>
-                        {status.reason}
-                    </li>
-                ))}
-            </ul>
+        <div className="tube-container">
+            <h3 className={`tube-name ${tubeId}`} >{tubeName}</h3>
+            {tubeStatus.map(status => (
+                <div className="tube-status" key={status.id}>
+                    <div className="tube-status-severity">{status.statusSeverityDescription}</div>
+                    <div className="tube-status-reason">{status.reason}</div>
+                </div>
+            ))}
         </div>
     )
 }
