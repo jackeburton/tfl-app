@@ -67,7 +67,7 @@ function App() {
         onChange={(value) => updateLineSelected(value)}
       />
       <TubeLines lineInfo={lineInfo} />
-      <BusLines lineInfo={busInfo} />
+      {/*<BusLines lineInfo={busInfo} />*/}
     </div>
   );
 }
