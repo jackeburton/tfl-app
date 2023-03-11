@@ -24,7 +24,7 @@ const getLineStatusOLD = (lines) => {
 
 }
 
-const getLineStatus = (lines) => {
+const getLineStatus = (lines, showOnlyBadServiceLines = false) => {
 
     if (Array.isArray(lines)) {
         let strlines = ""
@@ -35,7 +35,22 @@ const getLineStatus = (lines) => {
     }
 
     const request = axios.get(`https://api.tfl.gov.uk/Line/${lines}/Status`)
-    return request.then(response => response.data)
+    return request.then(response => {
+        if (showOnlyBadServiceLines) {
+            var i = 0;
+            while (i < response.length) {
+                if (response[i].lineStatuses[0].lineStatuses[0].statusSeverity !== 10) {
+                    console.log(response[i].lineStatuses[0].lineStatuses[0].statusSeverity)
+                    response.splice(i, 1);
+                } else {
+                    ++i;
+                }
+            }
+
+            return response.data
+        }
+        return response.data
+    })
 }
 
 const getArrival = (lines, stop) => {

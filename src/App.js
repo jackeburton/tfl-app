@@ -6,8 +6,10 @@ import Dropdown from './components/Dropdown'
 import lineService from './services/Lines'
 import busStopService from './services/BusStops'
 import './Fonts.css';
+import './Settings.css'
 const dbBusLines = '188'
 const dbBusStops = '490005231K'
+const showOnlyBadServiceLines = true
 
 function App() {
   const [lineInfo, setLineInfo] = useState([])
@@ -41,9 +43,21 @@ function App() {
         setAllLines(initialTubeLines)
       })
 
+
+
     //busStopService.getAllStops()
 
   }, [])
+
+  useEffect(() => {
+    if (showOnlyBadServiceLines) {
+      lineService
+        .getLineStatus(allLines, showOnlyBadServiceLines)
+        .then(Lines => {
+          setLineInfo(Lines)
+        })
+    }
+  }, [allLines])
 
   useEffect(() => {
     if (lineSelected) {
@@ -61,11 +75,18 @@ function App() {
 
   return (
     <div>
-      <Dropdown
-        isMulti placeHolder="Select..."
-        options={allLines}
-        onChange={(value) => updateLineSelected(value)}
-      />
+      <div style={{ display: "flex" }}>
+        <Dropdown
+          isMulti placeHolder="Select..."
+          options={allLines}
+          onChange={(value) => updateLineSelected(value)}
+        />
+        <div>
+          <input className='setting checkbox' type="checkbox">
+
+          </input>
+        </div>
+      </div>
       <TubeLines lineInfo={lineInfo} />
       {/*<BusLines lineInfo={busInfo} />*/}
     </div>
