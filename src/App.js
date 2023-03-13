@@ -28,39 +28,37 @@ function App() {
     ]
   )
   const [allLines, setAllLines] = useState([])
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-
-    lineService
-      .getArrival(dbBusLines, dbBusStops)
-      .then(initialBusLines => {
-        setBusInfo(initialBusLines)
-      })
-
-    lineService
-      .getAllTubeLines()
+    lineService.getAllTubeLines()
       .then(initialTubeLines => {
         setAllLines(initialTubeLines)
+        setIsMounted(true)
       })
-
-
-
-    //busStopService.getAllStops()
-
   }, [])
 
   useEffect(() => {
-    if (showOnlyBadServiceLines) {
-      lineService
-        .getLineStatus(allLines, showOnlyBadServiceLines)
+    if (isMounted && showOnlyBadServiceLines && allLines.length > 0) {
+      lineService.getLineStatus(allLines)
         .then(Lines => {
           setLineInfo(Lines)
         })
     }
-  }, [allLines])
-
+  }, [allLines, isMounted])
+  /*
+    useEffect(() => {
+      if (showOnlyBadServiceLines) {
+        lineService
+          .getLineStatus(allLines)
+          .then(Lines => {
+            setLineInfo(Lines)
+          })
+      }
+    }, [allLines])
+  */
   useEffect(() => {
-    if (lineSelected) {
+    if (lineSelected && !showOnlyBadServiceLines) {
       lineService
         .getLineStatus(lineSelected)
         .then(Lines => {
@@ -87,7 +85,7 @@ function App() {
           </input>
         </div>
       </div>
-      <TubeLines lineInfo={lineInfo} />
+      <TubeLines lineInfo={lineInfo} showOnlyBadServiceLines={showOnlyBadServiceLines} />
       {/*<BusLines lineInfo={busInfo} />*/}
     </div>
   );

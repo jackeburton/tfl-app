@@ -1,4 +1,3 @@
-
 import "./Tube.css";
 
 const Tube = ({ tubeName, tubeStatus, tubeId }) => {
@@ -11,7 +10,7 @@ const Tube = ({ tubeName, tubeStatus, tubeId }) => {
             </div>
             {
                 tubeStatus.map(status => (
-                    <div className="tube-status-reason" key={status.id}>
+                    <div className="tube-status-reason" key={status.reason + status.statusSeverityDescription} >
                         {status.reason}
                     </div>
                 ))
