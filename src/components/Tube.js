@@ -8,9 +8,9 @@ const Tube = ({ tubeName, tubeStatus, tubeId }) => {
                 <div className={`tube-name ${tubeId}`} >{tubeName}</div>
                 <div className={`tube-status severity${tubeStatus[0].statusSeverity}`} > {tubeStatus[0].statusSeverityDescription}</div>
             </div>
-            {
+            {//todo remove duplicates when a duplicate happens
                 tubeStatus.map(status => (
-                    <div className="tube-status-reason" key={status.reason + status.statusSeverityDescription} >
+                    <div className="tube-status-reason" key={status.id} >
                         {status.reason}
                     </div>
                 ))

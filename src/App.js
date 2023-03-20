@@ -9,12 +9,13 @@ import './Fonts.css';
 import './Settings.css'
 const dbBusLines = '188'
 const dbBusStops = '490005231K'
-const showOnlyBadServiceLines = true
+const showOnlyBadServiceLines = false
 
 function App() {
   const [lineInfo, setLineInfo] = useState([])
   const [busInfo, setBusInfo] = useState([])
   const [lineSelected, setLineSelected] = useState(null)
+  const [busSelected, setBusSelected] = useState(null)
   const [busLineStop, setBusLineStop] = useState(
     [
       {
@@ -28,47 +29,53 @@ function App() {
     ]
   )
   const [allLines, setAllLines] = useState([])
-  const [isMounted, setIsMounted] = useState(false)
+  const [allBusses, setAllBusses] = useState([])
+  const [isTubeMounted, setIsTubeMounted] = useState(false)
+  const [isBusMounted, setIsBusMounted] = useState(false)
+
 
   useEffect(() => {
     lineService.getAllTubeLines()
       .then(initialTubeLines => {
         setAllLines(initialTubeLines)
-        setIsMounted(true)
+        setIsTubeMounted(true)
+      })
+
+    lineService.getAllBusLines()
+      .then(initialBusLines => {
+        setAllBusses(initialBusLines)
+        setIsBusMounted(true)
       })
   }, [])
 
   useEffect(() => {
-    if (isMounted && showOnlyBadServiceLines && allLines.length > 0) {
+    if (isTubeMounted && showOnlyBadServiceLines && allLines.length > 0) {
       lineService.getLineStatus(allLines)
         .then(Lines => {
           setLineInfo(Lines)
         })
     }
-  }, [allLines, isMounted])
-  /*
-    useEffect(() => {
-      if (showOnlyBadServiceLines) {
-        lineService
-          .getLineStatus(allLines)
-          .then(Lines => {
-            setLineInfo(Lines)
-          })
-      }
-    }, [allLines])
-  */
+  }, [allLines, isTubeMounted])
+
   useEffect(() => {
-    if (lineSelected && !showOnlyBadServiceLines) {
+    if (lineSelected && !showOnlyBadServiceLines && lineSelected.length !== 0) {
       lineService
         .getLineStatus(lineSelected)
         .then(Lines => {
           setLineInfo(Lines)
         })
+    } else if (lineSelected.length === 0) {
+      setLineInfo([])
     }
   }, [lineSelected])
 
   const updateLineSelected = (newSelectedLines) => {
     setLineSelected(newSelectedLines)
+    console.log('new line selected')
+  }
+
+  const updateBusSelected = (newSelectedBuses) => {
+    setBusSelected(newSelectedBuses)
   }
 
   return (
@@ -78,6 +85,14 @@ function App() {
           isMulti placeHolder="Select..."
           options={allLines}
           onChange={(value) => updateLineSelected(value)}
+          isSearchable
+        />
+
+        <Dropdown
+          isMulti placeHolder="Select..."
+          options={allBusses}
+          onChange={(value) => updateBusSelected(value)}
+          isSearchable
         />
         <div>
           <input className='setting checkbox' type="checkbox">

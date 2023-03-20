@@ -1,28 +1,6 @@
 import axios from 'axios'
 
-const getLine = () => {
-    const request = axios.get('https://api.tfl.gov.uk/Line/188/Status')
-    return request.then(response => response.data)
-}
 
-
-const getLineStatusOLD = (lines) => {
-    let statuses = []
-    let promises = []
-    for (var i = 0; i < lines.length; i++) {
-        promises.push(
-            axios
-                .get(`https://api.tfl.gov.uk/Line/${lines[i].id}/Status`)
-                .then(response => {
-                    statuses.push({
-                        id: response.data[0].name
-                    })
-                })
-        )
-    }
-    return statuses
-
-}
 
 const getLineStatus = (lines) => {
 
@@ -37,6 +15,7 @@ const getLineStatus = (lines) => {
     const request = axios.get(`https://api.tfl.gov.uk/Line/${lines}/Status`)
     console.log({ lines })
     return request.then(response => response.data)
+
 }
 
 const getArrival = (lines, stop) => {
@@ -63,9 +42,26 @@ const getAllTubeLines = () => {
         });
 }
 
+const getAllBusLines = () => {
+    return axios.get('https://api.tfl.gov.uk/Line/Mode/bus/Route')
+        .then(response => {
+            const data = response.data;
+            const tubeLines = data.map(item => {
+                return {
+                    label: item.name,
+                    value: item.id
+                };
+            });
+            return tubeLines;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
 const exportedObject = {
-    getLine,
     getLineStatus,
+    getAllBusLines,
     getArrival,
     getAllTubeLines
 };

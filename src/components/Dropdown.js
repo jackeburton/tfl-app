@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import "./Dropdown.css";
 
@@ -18,14 +18,33 @@ const CloseIcon = () => {
     );
 };
 
-const Dropdown = ({ placeHolder, options, isMulti, onChange }) => {
+const Dropdown = ({ placeHolder, options, isMulti, onChange, isSearchable }) => {
 
     const [showMenu, setShowMenu] = useState(false)
     const [selectedValue, setSelectedValue] = useState(isMulti ? [] : null)
 
+    const [searchValue, setSearchValue] = useState("");
+    const searchRef = useRef();
+    const inputRef = useRef();
+
 
     useEffect(() => {
-        const handler = () => setShowMenu(false);
+        setSearchValue("");
+        if (showMenu && searchRef.current) {
+            searchRef.current.focus();
+        }
+    }, [showMenu]);
+
+    useEffect(() => {
+
+        const handler = (e) => {
+            if (inputRef.current && !inputRef.current.contains(e.target)) {
+                setShowMenu(false)
+            }
+
+        };
+
+
 
         window.addEventListener("click", handler);
         return () => {
@@ -34,7 +53,7 @@ const Dropdown = ({ placeHolder, options, isMulti, onChange }) => {
     })
 
     const handleInputClick = (e) => {
-        e.stopPropagation();
+
         setShowMenu(!showMenu);
     }
 
@@ -96,9 +115,19 @@ const Dropdown = ({ placeHolder, options, isMulti, onChange }) => {
         return selectedValue.value === option.value
     }
 
+    const onSearch = (e) => {
+        setSearchValue(e.target.value);
+    };
+    const getOptions = () => {
+        if (!searchValue) {
+            return options;
+        }
+        return options.filter((option) => option.label.toLowerCase().indexOf(searchValue.toLowerCase()) >= 0);
+    };
+
     return (
         <div className="dropdown-container">
-            <div onClick={handleInputClick} className="dropdown-input">
+            <div ref={inputRef} onClick={handleInputClick} className="dropdown-input">
                 <div className="dropdown-selected-value">{getDisplay()}</div>
                 <div className="dropdown-tools">
                     <div className="dropdown-tool">
@@ -107,7 +136,12 @@ const Dropdown = ({ placeHolder, options, isMulti, onChange }) => {
                 </div>
             </div>
             {showMenu && (<div className="dropdown-menu">
-                {options.map((option) => (
+                {isSearchable && (
+                    <div className="search-box">
+                        <input onChange={onSearch} value={searchValue} ref={searchRef} />
+                    </div>
+                )}
+                {getOptions().map((option) => (
                     <div
                         onClick={() => onItemClick(option)}
                         key={option.value}
