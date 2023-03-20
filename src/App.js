@@ -5,6 +5,7 @@ import BusLines from './components/BusLines'
 import Dropdown from './components/Dropdown'
 import lineService from './services/Lines'
 import busStopService from './services/BusStops'
+import BusSelector from './components/BusSelector'
 import './Fonts.css';
 import './Settings.css'
 const dbBusLines = '188'
@@ -14,7 +15,7 @@ const showOnlyBadServiceLines = false
 function App() {
   const [lineInfo, setLineInfo] = useState([])
   const [busInfo, setBusInfo] = useState([])
-  const [lineSelected, setLineSelected] = useState(null)
+  const [lineSelected, setLineSelected] = useState([])
   const [busSelected, setBusSelected] = useState(null)
   const [busLineStop, setBusLineStop] = useState(
     [
@@ -94,6 +95,7 @@ function App() {
           onChange={(value) => updateBusSelected(value)}
           isSearchable
         />
+        <BusSelector allLines={allBusses} />
         <div>
           <input className='setting checkbox' type="checkbox">
 
